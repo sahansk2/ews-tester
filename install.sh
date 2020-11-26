@@ -1,15 +1,26 @@
 #!/bin/bash
-source ./install.cfg
 
-# Try to infer missing
-if [[ -z "$REMOTE_SRC" ]]; then
-    REMOTE_SRC=$(git config --get remote.origin.url)
-    if [[ -z "$REMOTE_SRC" ]]; then
-        echo "You're not in a git repository with an origin remote, and you haven't specified REMOTE_SRC. Please do one or the other."
-        exit 1
-    fi
-fi
+# ===================================================================================
 
+# ============== REQUIRED ================
+# Server that you SSH to.
+REMOTE_SERVER="netid2@cs225-remote.ews.illinois.edu" 
+
+# Email address to which you would like notifications.
+EWS_TEST_RECIPIENT="netid2@illinois.edu" 
+
+# Cloneable URL for your repo. 
+REMOTE_SRC='git@github-dev.cs.illinois.edu:cs296-25-fa20/netid2.git'
+
+# ============== OPTIONAL ================
+# Installation location of the testing repo.
+CLONE_LOCATION="" # Default is ~/.ews-tester/$REPO
+
+# Installation path for aha
+AHA_INSTALL="" # Default is ~/.local/, binary will be located in $AHA_INSTALL/bin
+
+
+# ===================================================================================
 ssh $REMOTE_SERVER AHA_INSTALL=$AHA_INSTALL REMOTE_SRC=$REMOTE_SRC REMOTE_SERVER=$REMOTE_SERVER EWS_TEST_RECIPIENT=$EWS_TEST_RECIPIENT REPO=$REPO 'bash -s' <<"ENDSSH"
 RED='\033[1;31m'
 PURPLE='\033[1;35m'
@@ -33,13 +44,18 @@ print_success() {
     printf "$GREEN$1$NC\n"
 }
 
+if [[ -z "$REMOTE_SRC" ]]; then
+    print_error "You haven't specified \$REMOTE_SRC. Please do so."
+    exit 1
+fi
+
 if [[ -z "$REPO" ]]; then
     if [[ $REMOTE_SRC = git@* ]]; then
         REPO=$(echo $REMOTE_SRC | cut -d ":" -f2 | cut -d "." -f1)
     elif [[ $REMOTE_SRC = http* ]]; then
         REPO=$(echo $REMOTE_SRC | awk -F'/' '{ print $(NF-1)"/"$NF }' | cut -d "." -f1)
     else
-        print_error "You have not specified the repo name, and it cannot be inferred."
+        print_error "You have not specified the repo name, and it cannot be inferred from \$REMOTE_SRC."
         exit 1
     fi
 fi
@@ -120,7 +136,7 @@ echo "export REPO=$REPO" >> "$POST_RECEIVE"
 echo 'git checkout master' >> "$POST_RECEIVE"
 echo 'echo -e "\033[1;32m EWS-Tester is launching on $REPO. \033[0m"' >> "$POST_RECEIVE"
 echo "export GIT_WORK_TREE=$CLONE_LOCATION"  >> "$POST_RECEIVE"
-echo 'echo "bash $GIT_WORK_TREE/auto-script.sh" | at -M now' >> "$POST_RECEIVE"
+echo 'echo "bash $GIT_WORK_TREE/ews-tester.sh" | at -M now' >> "$POST_RECEIVE"
 
 print_success "Successfully gone through install procedure!"
 print_tip "Please add the install directory as a remote, so that you can push to it:\n"

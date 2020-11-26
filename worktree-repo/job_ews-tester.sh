@@ -15,9 +15,9 @@ echo "========================"
 echo
 
 # ===== Define your actual testing here. =====
-module load llvm/6.0.1
-cd $BUILD_FOLDER
-make -s clean
-make -s $BUILD_BINARY
-time ./$BUILD_BINARY
+module load llvm/6.0.1 # load clang++ 
+cd $BUILD_FOLDER # cd into current MP folder
+make -s clean # remove old build files 
+make -s $BUILD_BINARY # generate new build file from scratch
+time ./$BUILD_BINARY # run the build file and time it
 # =============================================

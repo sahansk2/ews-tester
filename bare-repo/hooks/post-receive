@@ -1,7 +1,0 @@
-#!/bin/bash
-export GIT_DIR=${CHECKOUTABLE_REPO}/.git
-export GIT_WORK_TREE=${CHECKOUTABLE_REPO}
-git fetch intermediate
-git reset --hard intermediate/master 
-echo "Launching script"
-echo "bash $GIT_WORK_TREE/auto-script.sh" | at -M now

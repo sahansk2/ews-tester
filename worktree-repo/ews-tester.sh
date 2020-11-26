@@ -6,11 +6,9 @@ ews_tester_setup
 # ================== ews_tester commands ===============
 HASH=$(git rev-parse --short HEAD)
 MESSAGE=$(git log -n 1 --pretty=format:%s)
-source ./build-job.cfg
-script -efq /dev/null -c "./build-job.sh" | aha -x > output.html
+script -efq /dev/null -c "./job_ews-tester.sh" | aha -x > output.html
 
 log_message "Sending mail"
-source gitmail.cfg
 mutt -e 'set content_type=text/html' \
 	-s "$REPO@$HASH: Build \"$MESSAGE\" finished." \
 	"$RECIPIENT" < output.html
@@ -19,8 +17,10 @@ mutt -e 'set content_type=text/html' \
 ews_tester_cleanup
 }
 
+# ================== support functions =================
+
 log_message() {
-    echo "[INFO:auto-script] $1"
+    echo "[INFO:ews-tester] $1"
 }
 
 trap "log_message 'Something bad happened!'" SIGHUP
