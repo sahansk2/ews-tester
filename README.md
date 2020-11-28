@@ -50,10 +50,17 @@ cs296-25-fa20
 └── README.md
 ```
 
-Add these files and commit, and you're done! You will 99% of the time never need to touch `ews-tester.sh`. You can control the actual commands you execute by specifying `job_ews-tester.sh`. A useful template has already been provided here.
+Add these files and commit, and you're done! You will 99% of the time never need to touch `ews-tester.sh`. You can control the actual commands you execute by specifying `job_ews-tester.sh`. A useful template has already been provided here. 
+
+If you want to run tests on EWS from your local machine, if you've set up the remote as per the install script's instructions, all you have to do is run:
+```
+git push --force ews-tester
+```
+from your master branch (all tests will operate only on the master branch). Just wait a little bit, and you should get an email to your inbox!
+
 
 These instructions should be clear enough for you to get going. Enjoy a life of no longer having to ssh into EWS every time you want to run tests!
 
-## Having trouble/seeing bugs?
+## Having trouble setting up/seeing bugs?
 
-Please open up a GitHub issue if you're having any troubles whatsoever. It's much easier to respond to issues in this kind of way. Please also considering giving a star if this script helped you. Thanks!
+Please open up a GitHub issue if you're having any troubles whatsoever, so that problems/suggestions can be documented cleanly. Please also considering giving a star if this script helped you. Thanks!
